@@ -71,7 +71,8 @@ const startDrawing = (e) => {
 const Drawing = (e) => {
 	if (!isDrawing) return;
 	ctx.putImageData(snapshot, 0, 0);
-	if (selectedTool === "brush") {
+	if (selectedTool === "brush" || selectedTool === "eraser") {
+		ctx.strokeStyle = selectedTool === "brush" ? selectedColor : "#fff";
 		ctx.lineTo(e.offsetX, e.offsetY);
 		ctx.stroke();
 	} else if (selectedTool === "rectangle") {
@@ -107,6 +108,10 @@ colorBtns.forEach((btn) => {
 colorPicker.addEventListener("change", () => {
 	colorPicker.parentElement.style.background = colorPicker.value;
 	colorPicker.parentElement.click();
+});
+
+clearCanvas.addEventListener("click", () => {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
 canvas.addEventListener("mousedown", startDrawing);
