@@ -16,9 +16,16 @@ let prevMouseX,
 	brushWidth = 5,
 	selectedColor = "#000";
 
+const setCanvasBackground = () => {
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = selectedColor;
+}
+
 window.addEventListener("load", () => {
 	canvas.height = canvas.offsetHeight;
 	canvas.width = canvas.offsetWidth;
+    setCanvasBackground();
 });
 
 const drawRect = (e) => {
@@ -112,6 +119,14 @@ colorPicker.addEventListener("change", () => {
 
 clearCanvas.addEventListener("click", () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setCanvasBackground();
+});
+
+saveImg.addEventListener("click", () => {
+	const link = document.createElement("a");
+	link.download = `canvas-${Date.now()}.png`;
+	link.href = canvas.toDataURL();
+	link.click();
 });
 
 canvas.addEventListener("mousedown", startDrawing);
