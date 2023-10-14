@@ -133,3 +133,18 @@ saveImg.addEventListener("click", () => {
 canvas.addEventListener("mousedown", startDraw);
 canvas.addEventListener("mousemove", drawing);
 canvas.addEventListener("mouseup", () => (isDrawing = false));
+
+canvas.addEventListener("touchstart", (e) => {
+	e.preventDefault();
+	startDraw(e.touches[0]);
+});
+
+canvas.addEventListener("touchmove", (e) => {
+	e.preventDefault();
+	drawing(e.touches[0]);
+});
+
+canvas.addEventListener("touchend", (e) => {
+	e.preventDefault();
+	isDrawing = false;
+});
