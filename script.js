@@ -17,20 +17,20 @@ let prevMouseX,
 	selectedColor = "#000";
 
 const setCanvasBackground = () => {
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = selectedColor;
-}
+	ctx.fillStyle = "#fff";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = selectedColor;
+};
 
 window.addEventListener("load", () => {
-	canvas.height = canvas.offsetHeight;
 	canvas.width = canvas.offsetWidth;
-    setCanvasBackground();
+	canvas.height = canvas.offsetHeight;
+	setCanvasBackground();
 });
 
 const drawRect = (e) => {
 	if (!fillColor.checked) {
-		ctx.strokeRect(
+		return ctx.strokeRect(
 			e.offsetX,
 			e.offsetY,
 			prevMouseX - e.offsetX,
@@ -64,7 +64,7 @@ const drawTriangle = (e) => {
 	fillColor.checked ? ctx.fill() : ctx.stroke();
 };
 
-const startDrawing = (e) => {
+const startDraw = (e) => {
 	isDrawing = true;
 	prevMouseX = e.offsetX;
 	prevMouseY = e.offsetY;
@@ -75,18 +75,18 @@ const startDrawing = (e) => {
 	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 };
 
-const Drawing = (e) => {
+const drawing = (e) => {
 	if (!isDrawing) return;
 	ctx.putImageData(snapshot, 0, 0);
 	if (selectedTool === "brush" || selectedTool === "eraser") {
-		ctx.strokeStyle = selectedTool === "brush" ? selectedColor : "#fff";
+		ctx.strokeStyle = selectedTool === "eraser" ? "#fff" : selectedColor;
 		ctx.lineTo(e.offsetX, e.offsetY);
 		ctx.stroke();
 	} else if (selectedTool === "rectangle") {
 		drawRect(e);
 	} else if (selectedTool === "circle") {
 		drawCircle(e);
-	} else if (selectedTool === "triangle") {
+	} else {
 		drawTriangle(e);
 	}
 };
@@ -100,10 +100,11 @@ toolBtns.forEach((btn) => {
 });
 
 sizeSlider.addEventListener("change", () => (brushWidth = sizeSlider.value));
+
 colorBtns.forEach((btn) => {
 	btn.addEventListener("click", () => {
 		document
-			.querySelector(".colors .selected")
+			.querySelector(".options .selected")
 			.classList.remove("selected");
 		btn.classList.add("selected");
 		selectedColor = window
@@ -119,7 +120,7 @@ colorPicker.addEventListener("change", () => {
 
 clearCanvas.addEventListener("click", () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setCanvasBackground();
+	setCanvasBackground();
 });
 
 saveImg.addEventListener("click", () => {
@@ -129,6 +130,6 @@ saveImg.addEventListener("click", () => {
 	link.click();
 });
 
-canvas.addEventListener("mousedown", startDrawing);
-canvas.addEventListener("mousemove", Drawing);
+canvas.addEventListener("mousedown", startDraw);
+canvas.addEventListener("mousemove", drawing);
 canvas.addEventListener("mouseup", () => (isDrawing = false));
