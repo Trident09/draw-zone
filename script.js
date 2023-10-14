@@ -49,13 +49,13 @@ const drawCircle = (e) => {
 };
 
 const drawTriangle = (e) => {
-    ctx.beginPath();
-    ctx.moveTo(prevMouseX, prevMouseY);
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.lineTo(prevMouseX * 2 - e.offsetX, e.offsetY);
-    ctx.closePath();
-    fillColor.checked ? ctx.fill() : ctx.stroke();
-}
+	ctx.beginPath();
+	ctx.moveTo(prevMouseX, prevMouseY);
+	ctx.lineTo(e.offsetX, e.offsetY);
+	ctx.lineTo(prevMouseX * 2 - e.offsetX, e.offsetY);
+	ctx.closePath();
+	fillColor.checked ? ctx.fill() : ctx.stroke();
+};
 
 const startDrawing = (e) => {
 	isDrawing = true;
@@ -63,6 +63,8 @@ const startDrawing = (e) => {
 	prevMouseY = e.offsetY;
 	ctx.beginPath();
 	ctx.lineWidth = brushWidth;
+	ctx.strokeStyle = selectedColor;
+	ctx.fillStyle = selectedColor;
 	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 };
 
@@ -77,8 +79,8 @@ const Drawing = (e) => {
 	} else if (selectedTool === "circle") {
 		drawCircle(e);
 	} else if (selectedTool === "triangle") {
-        drawTriangle(e);
-    }
+		drawTriangle(e);
+	}
 };
 
 toolBtns.forEach((btn) => {
@@ -86,8 +88,25 @@ toolBtns.forEach((btn) => {
 		document.querySelector(".options .active").classList.remove("active");
 		btn.classList.add("active");
 		selectedTool = btn.id;
-		alert(selectedTool);
 	});
+});
+
+sizeSlider.addEventListener("change", () => (brushWidth = sizeSlider.value));
+colorBtns.forEach((btn) => {
+	btn.addEventListener("click", () => {
+		document
+			.querySelector(".colors .selected")
+			.classList.remove("selected");
+		btn.classList.add("selected");
+		selectedColor = window
+			.getComputedStyle(btn)
+			.getPropertyValue("background-color");
+	});
+});
+
+colorPicker.addEventListener("change", () => {
+	colorPicker.parentElement.style.background = colorPicker.value;
+	colorPicker.parentElement.click();
 });
 
 canvas.addEventListener("mousedown", startDrawing);
